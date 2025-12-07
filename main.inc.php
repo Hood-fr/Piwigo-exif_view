@@ -1,8 +1,8 @@
 <?php /*
 Plugin Name: Exif View
-Version: 12.b
+Version: 16.a
 Description: Converts EXIF values to human readable localized values. Corresponds to EXIF specification 2.2, details in http://www.exif.org. Easily extensible.
-Plugin URI: http://piwigo.org/ext/extension_view.php?eid=155
+Plugin URI: https://piwigo.org/ext/extension_view.php?eid=155
 Author: Martin Javorek
 Author URI: mailto:maple@seznam.cz&subject=PWG%20EXIF%20View
 */
@@ -143,7 +143,7 @@ function exif_key_translation($key, $value) {
    // aperture
 	 if (!(strpos($key, 'FNumber') === FALSE)) {
       $tokens = explode('/', $value);
-      return $tokens[0]/$tokens[1];
+      return $tokens[0]/($tokens[1]??10);
    }
 
    // flash
@@ -197,7 +197,7 @@ function exif_key_translation($key, $value) {
    // focal length
    if (!(strpos($key, 'FocalLength') === FALSE)) {
       $tokens = explode('/', $value);
-      return (round($tokens[0]/$tokens[1])).' mm';
+      return (round($tokens[0]/($tokens[1]??10))).' mm';
    }
 
    // digital zoom
@@ -242,7 +242,7 @@ function exif_key_translation($key, $value) {
    }
 
    // XResolution or YResolution
-   if (!(strpos($key, 'Resolution') === FALSE)) {
+   if (in_array($key, array('XResolution', 'YResolution'))) {
       $tokens = explode('/', $value);
       if (isset($tokens[1]))
       {
